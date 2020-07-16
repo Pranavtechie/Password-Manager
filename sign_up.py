@@ -11,7 +11,7 @@ class Sign_Up_Window(object):
     """This class runs the UI of the Sign Up Window"""
 
     def __init__(self):
-        """This __init__ method is to define the window elements"""
+        """This __init__ method is to defines the Sign Up Window elements"""
         self.window_sign_up = tk.Tk()
         self.window_sign_up.title('Sign Up')
         self.window_sign_up.geometry('500x450')

@@ -9,6 +9,7 @@ import about
 class Login_Window(object):
 
     def __init__(self):
+        """This __init__ method is to defines the Login Window elements"""
         self.window_login = tk.Tk()
         self.window_login.title('Login Page')
         self.window_login.geometry('400x270')
@@ -103,7 +104,8 @@ class Login_Window(object):
         self.sign_up_button.bind('<Leave>', self.leave_sign_up)
 
         self.forgot_password_button = tk.Button(self.window_login, text='Forgot Password - Recover your account here',
-                                bg='black',font=('Maiandra GD', 12,), fg='white', relief='flat', command=self.forgot)
+                                                bg='black',font=('Maiandra GD', 12,), fg='white', relief='flat',
+                                                command=self.open_forgot_password_window)
         self.forgot_password_button.place(x=30, y=230)
         self.forgot_password_button.bind('<Enter>', self.entered_forgot)
         self.forgot_password_button.bind('<Leave>', self.leave_forgot)
@@ -118,10 +120,10 @@ class Login_Window(object):
         self.window_login.destroy()
         sign_up.Sign_Up_Window()
 
-    def forgot(self):
+    def open_forgot_password_window(self):
         """Takes the user to the forgot Password Window"""
         self.window_login.destroy()
-        forgot_password.open_window()
+        forgot_password.Forgot_Password()
 
     def exit(self):
         """Exits the Appilication and destroy's the Window"""
@@ -137,12 +139,15 @@ class Login_Window(object):
 
     def login(self):
         """Checks the authentication of the user's login credentials"""
-        username = self.username_entry_var.get()
-        password = self.password_entry_var.get()
+        get_username = self.username_entry_var.get()
+        get_password = self.password_entry_var.get()
 
-        back_end.login_for_use(username, password)
+        back_end.login_for_use(get_username, get_password)
 
     @staticmethod
     def about_window():
         """This function opens the about_window"""
         about.About_Window()
+
+if __name__ == '__main__':
+    Login_Window()

@@ -255,7 +255,7 @@ def back():
 
 def open_about():
     """This function opens the about window"""
-    about.open_window()
+    about.About_Window()
 
 def show_password(username, button):
     """This function shows the data in the password_edit module"""

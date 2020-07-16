@@ -5,227 +5,296 @@ import back_end
 from tkinter import messagebox as msgb
 import login
 
-def back():
-    """This function closes the forgot_password window and
-redirects to login window"""
-    window_forgot.destroy()
+class Forgot_Password(object):
+    """This class runs the UI of the Forgot Password Window"""
 
-    login.open_window()
+    def __init__(self):
+        self.window_forgot = tk.Tk()
+        self.window_forgot.title('Forgot Password')
+        self.window_forgot.resizable(False, False)
+        self.window_forgot.configure(bg='black')
+        self.window_forgot.geometry('600x500')
+        self.window_forgot.iconbitmap('resources/icon.ico')
+        self.init_ui()
 
-def change_the_password(username):
-    """This function passes the data to the back_end to update the password"""
-    pass_1 = enter_new_password_entry_var.get()
-    pass_2 = retype_password_entry_var.get()
+    def entered_get_question(self, event):
+        self.get_question.configure(bg='gold')
 
-    if pass_1 == pass_2:
-        back_end.update_password(username, pass_1)
-        window_forgot.destroy()
-        login.open_window()
+    def leave_get_question(self, event):
+        self.get_question.configure(bg='light blue')
 
+    def entered_clear_usr(self, event):
+        self.clear_username.configure(bg='gold')
 
-    else:
-        pass
+    def leave_clear_usr(self, event):
+        self.clear_username.configure(bg='light blue')
 
-def clear_username_entry():
-    """This function clears the data in the entry box of the username"""
-    username_entry_var.set('')
+    def entered_change(self, event):
+        self.change_password.configure(bg='#a3ffb3')
 
-def password_clear():
-    """This function clears the data in the passwords entry boxes"""
-    enter_new_password_entry_var.set('')
-    retype_password_entry_var.set('')
+    def leave_change(self, event):
+        self.change_password.configure(bg='#f1f5e0')
 
+    def entered_clear_answers(self, event):
+        self.clear_answers.configure(bg='#a3ffb3')
 
-def open_window():
-    """This function runs the UI of the forgot_password"""
-    
-    def entered_get_question(event):
-        get_question.configure(bg = 'gold')
-        
-    def leave_get_question(event):
-        get_question.configure(bg = 'light blue')
-        
-    def entered_clear_usr(event):
-        clear_username.configure(bg = 'gold')
-        
-    def leave_clear_usr(event):
-        clear_username.configure(bg = 'light blue')
-        
+    def leave_clear_answers(self, event):
+        self.clear_answers.configure(bg='#f1f5e0')
 
-    def enter_changes(username):
-        """This function manages the UI of the password entry and gets the new password data """
+    def entered_cancel_changes(self, event):
+        self.cancel_changes.configure(bg='#a3ffb3')
 
-        enter_new_password = tk.Label(window_forgot, text = 'Enter New Password',font=(
-            'arial', 12, 'bold'), bg='black', fg='#FFB6C1')
-        enter_new_password.place(x=5, y=210)
+    def leave_cancel_changes(self, event):
+        self.cancel_changes.configure(bg='#f1f5e0')
 
-        global enter_new_password_entry_var
-        enter_new_password_entry_var = tk.StringVar()
-        enter_new_password_entry = tk.Entry(window_forgot, textvariable=enter_new_password_entry_var, width=20, font=(
-            'arial', 12), bg='#C0C0C0')
-        enter_new_password_entry.place(x=170, y=210)
+    def init_ui(self):
+        self.heading = tk.Label(self.window_forgot, text='Forgot Password', font=(
+            'arial', 18, 'bold'), bg='black', fg='orange')
+        self.heading.pack()
 
-        retype_password = tk.Label(window_forgot, text='Retype Password', font=(
-            'arial', 12, 'bold'), bg='black', fg='#FFB6C1')
-        retype_password.place(x=30, y=240)
+        self.about_image = tk.PhotoImage(file='resources/about.png')
+        self.about_icon = tk.Button(self.window_forgot, image=self.about_image, bg='black', fg='white', relief='flat',
+                               command=self.open_about)
+        self.about_icon.place(x=565, y=0)
 
-        global retype_password_entry_var
-        retype_password_entry_var = tk.StringVar()
-        retype_password_entry = tk.Entry(window_forgot, textvariable=retype_password_entry_var, width=20, font=(
-                                            'arial', 12), bg='#C0C0C0')
-        retype_password_entry.place(x=170, y=240)
+        self.pic = tk.PhotoImage(file='resources/back.png')
+        self.dis = tk.Button(self.window_forgot, image=self.pic, bg='black', command=self.back, relief='flat')
+        self.dis.place(x=0, y=0)
 
-        change_password = tk.Button(window_forgot, text = 'Change Password',font=(
-        'consolas', 13, 'bold'), relief='groove', width=15, bg='#f1f5e0', command=lambda: change_the_password(username))
-        change_password.place(x=130, y=280)
+        self.happy_img = tk.PhotoImage(file="resources/happy.png")
+        self.happy = tk.Label(self.window_forgot, text="Don't worry we are here to recover you account ",
+                              image=self.happy_img, compound='right',bg='black', fg='white', font=('Maiandra GD', 14))
+        self.happy.place(x=70, y=40)
 
-        clear_password = tk.Button(window_forgot, text = 'Clear',font=(
-        'consolas', 13, 'bold'), relief='groove', width=8, bg='#f1f5e0', command=password_clear)
-        clear_password.place(x=300, y=280)
+        self.username = tk.Label(self.window_forgot, text='Username', font=(
+            'timesnewroman', 12), bg='black', fg='white')
+        self.username.place(x=60, y=90)
 
+        self.username_entry_var = tk.StringVar()
+        self.username_entry = tk.Entry(self.window_forgot, font=('arial', 12),
+                                  bg='#C0C0C0', textvariable=self.username_entry_var)
+        self.username_entry.place(x=140, y=90)
+        self.username_entry.focus()
 
+        self.get_question = tk.Button(self.window_forgot, text='Get Questions', bg='light blue', relief='groove',
+                                 font=('Maiandra GD', 12, 'bold'), width=12, command=self.show_question)
+        self.get_question.place(x=160, y=130)
+        self.get_question.bind('<Enter>', self.entered_get_question)
+        self.get_question.bind('<Leave>', self.leave_get_question)
 
+        self.clear_username = tk.Button(self.window_forgot, text='Clear', bg='light blue', relief='groove',
+                                   font=('Maiandra GD', 12, 'bold'), width=8, command=self.clear_username_entry)
+        self.clear_username.place(x=320, y=130)
+        self.clear_username.bind('<Enter>', self.entered_clear_usr)
+        self.clear_username.bind('<Leave>', self.leave_clear_usr)
 
-    def show_question():
-        """This function shows the security question to change the password"""
+        self.window_forgot.focus_force()
+        self.window_forgot.mainloop()
 
-        def change_pass():
-            """This function destroys the widgets in the window to show password widgets"""
+    def show_question(self):
 
-            answer_1 = security_answer_1_var.get()
-            answer_2 = security_answer_2_var.get()
-            usr = given_username
-            security_question_1.destroy()
-            security_question_1_text.destroy()
-            security_answer_1.destroy()
-            security_answer_1_entry.destroy()
-            security_question_2.destroy()
-            security_question_2_text.destroy()
-            security_answer_2.destroy()
-            security_answer_2_entry.destroy()
-            change_password.destroy()
-            get_question.destroy()
-            clear_username.destroy()
-            username_entry.configure(state = 'disabled')
+        self.given_username = self.username_entry_var.get()
 
-            check_for_answer = back_end.check_answers(usr, answer_1, answer_2)
+        self.auth = back_end.check_username_for_signup(self.given_username)
 
-            if check_for_answer:
-                enter_changes(usr)
+        if not self.auth:
 
-        def entered_change(event):
-            change_password.configure(bg='#a3ffb3')
+            self.username_entry.configure(state = 'disabled')
+            self.get_question.destroy()
+            self.clear_username.destroy()
 
-        def leave_change(event):
-            change_password.configure(bg='#f1f5e0')
+            self.sq_1, self.sq_2 = back_end.get_question(self.given_username)
 
-        global given_username
-        given_username = username_entry_var.get()
-
-        auth = back_end.check_username_for_signup(given_username)
-        if not auth:
-            sq_1, sq_2 = back_end.get_question(given_username)
-
-            security_question_1 = tk.Label(window_forgot, text='Security Question 1', font=(
+            self.security_question_1 = tk.Label(self.window_forgot, text='Security Question 1', font=(
                 'arial', 12, 'bold'), fg='#FFB6C1', bg='black')
-            security_question_1.place(x=3, y=180)
-    
-            security_question_1_text = tk.Text(window_forgot, height=1, width=48, font=(
+            self.security_question_1.place(x=3, y=180)
+
+            self.security_question_1_text = tk.Text(self.window_forgot, height=1, width=48, font=(
                 'georgia', 10), relief='flat', bg='white')
-            security_question_1_text.place(x=160, y=180)
-            question_1 = f"{sq_1}"
-            security_question_1_text.insert(tk.END, question_1)
-            security_question_1_text.configure(state='disabled')
-    
-            security_answer_1 = tk.Label(window_forgot, text='Answer 1', font=(
+            self.security_question_1_text.place(x=160, y=180)
+            self.question_1 = f"{self.sq_1}"
+            self.security_question_1_text.insert(tk.END, self.question_1)
+            self.security_question_1_text.configure(state='disabled')
+
+            self.security_answer_1 = tk.Label(self.window_forgot, text='Answer 1', font=(
                 'arial', 12, 'bold'), bg='black', fg='#FFB6C1')
-            security_answer_1.place(x=80, y=210)
-    
-            global security_answer_1_var
-            security_answer_1_var = tk.StringVar()
-            security_answer_1_entry = tk.Entry(window_forgot, textvariable=security_answer_1_var, width=20, font=(
-                'arial', 12), bg='#C0C0C0')
-            security_answer_1_entry.place(x=160, y=210)
-    
-            security_question_2 = tk.Label(window_forgot, text='Security Question 2', font=(
+            self.security_answer_1.place(x=80, y=210)
+
+            self.security_answer_1_var = tk.StringVar()
+            self.security_answer_1_entry = tk.Entry(self.window_forgot, textvariable=self.security_answer_1_var,
+                                                    width=20, font=('arial', 12), bg='#C0C0C0')
+            self.security_answer_1_entry.place(x=160, y=210)
+            self.security_answer_1_entry.focus()
+
+            self.security_question_2 = tk.Label(self.window_forgot, text='Security Question 2', font=(
+                                                'arial', 12, 'bold'), bg='black', fg='#98FB98')
+            self.security_question_2.place(x=3, y=260)
+
+            self.security_question_2_text = tk.Text(self.window_forgot, height=1, width=48, font=(
+                                                    'georgia', 10), relief='flat', bg='white')
+            self.security_question_2_text.place(x=160, y=260)
+            self.question_2 = f"{self.sq_2}"
+            self.security_question_2_text.insert(tk.END, self.question_2)
+            self.security_question_2_text.configure(state='disabled')
+
+            self.security_answer_2 = tk.Label(self.window_forgot, text='Answer 2', font=(
                 'arial', 12, 'bold'), bg='black', fg='#98FB98')
-            security_question_2.place(x=3, y=260)
-    
-            security_question_2_text = tk.Text(window_forgot, height=1, width=48, font=(
-                'georgia', 10), relief='flat', bg='white')
-            security_question_2_text.place(x=160, y=260)
-            question_2 = f"{sq_2}"
-            security_question_2_text.insert(tk.END, question_2)
-            security_question_2_text.configure(state='disabled')
-    
-            security_answer_2 = tk.Label(window_forgot, text='Answer 2', font=(
-                'arial', 12, 'bold'), bg='black', fg='#98FB98')
-            security_answer_2.place(x=80, y=290)
-    
-            global security_answer_2_var
-            security_answer_2_var = tk.StringVar()
-            security_answer_2_entry = tk.Entry(window_forgot, textvariable=security_answer_2_var, width=20, font=(
-                'arial', 12), bg='#C0C0C0')
-            security_answer_2_entry.place(x=160, y=290)
-    
-            change_password = tk.Button(window_forgot, text='Change Password', font=(
-                'consolas', 13, 'bold'), relief='groove', width=16, bg='#f1f5e0', command=change_pass)
-            change_password.place(x=170, y=320)
-            change_password.bind('<Enter>', entered_change)
-            change_password.bind('<Leave>', leave_change)
-            
+            self.security_answer_2.place(x=80, y=290)
+
+            self.security_answer_2_var = tk.StringVar()
+            self.security_answer_2_entry = tk.Entry(self.window_forgot, textvariable=self.security_answer_2_var,
+                                                    width=20, font=('arial', 12), bg='#C0C0C0')
+            self.security_answer_2_entry.place(x=160, y=290)
+
+            self.change_password = tk.Button(self.window_forgot, text='Change Password', font=(
+                'consolas', 13, 'bold'), relief='groove', width=16, bg='#f1f5e0', command=self.change_pass)
+            self.change_password.place(x=60, y=340)
+            self.change_password.bind('<Enter>', self.entered_change)
+            self.change_password.bind('<Leave>', self.leave_change)
+
+            self.clear_answers = tk.Button(self.window_forgot, text='Clear', font=(
+                'consolas', 13, 'bold'), relief='groove', width=10, bg='#f1f5e0', command=self.clear_the_answers)
+            self.clear_answers.place(x=250, y=340)
+            self.clear_answers.bind('<Enter>', self.entered_clear_answers)
+            self.clear_answers.bind('<Leave>', self.leave_clear_answers)
+
+            self.cancel_changes = tk.Button(self.window_forgot, text='Cancel', font=(
+                'consolas', 13, 'bold'), relief='groove', width=10, bg='#f1f5e0', command=self.cancel_the_changes)
+            self.cancel_changes.place(x=390, y=340)
+            self.cancel_changes.bind('<Enter>', self.entered_cancel_changes)
+            self.cancel_changes.bind('<Leave>', self.leave_cancel_changes)
+
         else:
             msgb.showerror('Error in Username Check', 'The entered Username does not exists please try again')
 
-    global window_forgot
-    window_forgot = tk.Tk()
-    window_forgot.title('Forgot Password')
-    window_forgot.resizable(False, False)
-    window_forgot.configure(bg = 'black')
-    window_forgot.geometry('600x500')
-    window_forgot.iconbitmap('resources/icon.ico')
+    def change_pass(self):
+        """This function destroys the widgets in the window to show password widgets"""
 
-    heading = tk.Label(window_forgot, text = 'Forgot Password', font=(
-                        'arial', 18, 'bold'), bg='black', fg='orange')
-    heading.pack()
+        answer_1 = self.security_answer_1_var.get()
+        answer_2 = self.security_answer_2_var.get()
+        usr = self.given_username
 
-    about_image = tk.PhotoImage(file='resources/about.png')
-    about_icon = tk.Button(window_forgot, image=about_image, bg='black', fg='white', relief='flat',
-                           command=about.open_window)
-    about_icon.place(x=565, y=0)
+        if answer_1 == '' and answer_2 == '':
+            msgb.showerror('Error in Authentication','Please fill the Answers for recovery of your account')
+            self.check_for_answer = False
 
-    pic = tk.PhotoImage(file='resources/back.png')
-    dis = tk.Button(window_forgot, image=pic, bg='black', command=back, relief='flat')
-    dis.place(x=0, y=0)
+        elif answer_1 == '':
+            msgb.showerror('Error in Authentication','You have not entered the Answer 1. Please fill it.')
+            self.check_for_answer = False
 
-    happy_img = tk.PhotoImage(file="resources/happy.png")
-    happy = tk.Label(window_forgot, text="Don't worry we are here to recover you account ", image=happy_img, compound='right',
-                     bg='black', fg='white', font=('Maiandra GD', 14))
-    happy.place(x=70, y=40)
+        elif answer_2 == '':
+            msgb.showerror('Error in Authentication','You have not entered the Answer 2. Please fill it.')
+            self.check_for_answer = False
 
-    username = tk.Label(window_forgot, text = 'Username',font=(
-                        'timesnewroman', 12), bg='black', fg='white')
-    username.place(x=60, y=90)
+        else:
+            self.check_for_answer = back_end.check_answers(usr, answer_1, answer_2)
 
-    global username_entry_var
-    username_entry_var = tk.StringVar()
-    username_entry = tk.Entry(window_forgot, font=('arial', 12),
-                              bg='#C0C0C0', textvariable=username_entry_var)
-    username_entry.place(x=140, y=90)
-    username_entry.focus()
+        if self.check_for_answer:
 
-    get_question = tk.Button(window_forgot, text = 'Get Questions',bg = 'light blue',relief = 'groove',
-                          font = ('Maiandra GD',12,'bold'), width = 12, command = show_question)
-    get_question.place(x = 160, y = 130)
-    get_question.bind('<Enter>', entered_get_question)
-    get_question.bind('<Leave>', leave_get_question)
-    
+            self.security_question_1.destroy()
+            self.security_question_1_text.destroy()
+            self.security_answer_1.destroy()
+            self.security_answer_1_entry.destroy()
+            self.security_question_2.destroy()
+            self.security_question_2_text.destroy()
+            self.security_answer_2.destroy()
+            self.security_answer_2_entry.destroy()
+            self.change_password.destroy()
+            self.get_question.destroy()
+            self.clear_username.destroy()
+            self.clear_answers.destroy()
+            self.cancel_changes.destroy()
+            self.username_entry.configure(state='disabled')
 
-    clear_username = tk.Button(window_forgot, text='Clear', bg='light blue', relief='groove',
-                             font=('Maiandra GD', 12, 'bold'), width=8, command=clear_username_entry)
-    clear_username.place(x=320,y=130)
-    clear_username.bind('<Enter>', entered_clear_usr)
-    clear_username.bind('<Leave>', leave_clear_usr)
+            self.enter_changes(usr)
 
-    window_forgot.focus_force()
-    window_forgot.mainloop()
+        else:
+            pass
+
+    def enter_changes(self, username):
+        """This function manages the UI of the password entry and gets the new password data """
+
+        self.enter_new_password = tk.Label(self.window_forgot, text = 'Enter New Password',font=(
+                                            'arial', 12, 'bold'), bg='black', fg='#FFB6C1')
+        self.enter_new_password.place(x=5, y=210)
+
+        self.enter_new_password_entry_var = tk.StringVar()
+        self.enter_new_password_entry = tk.Entry(self.window_forgot, textvariable=self.enter_new_password_entry_var,
+                                                 width=20, font=('arial', 12), bg='#C0C0C0')
+        self.enter_new_password_entry.place(x=170, y=210)
+
+        self.retype_password = tk.Label(self.window_forgot, text='Retype Password', font=(
+            'arial', 12, 'bold'), bg='black', fg='#FFB6C1')
+        self.retype_password.place(x=30, y=240)
+
+        self.retype_password_entry_var = tk.StringVar()
+        self.retype_password_entry = tk.Entry(self.window_forgot, textvariable=self.retype_password_entry_var,
+                                              width=20, font=('arial', 12), bg='#C0C0C0')
+        self.retype_password_entry.place(x=170, y=240)
+
+        self.change_password = tk.Button(self.window_forgot, text = 'Change Password',relief='groove',width=15,font=(
+                    'consolas', 13, 'bold'), bg='#f1f5e0', command=lambda: change_the_password(username))
+        self.change_password.place(x=130, y=280)
+
+        self.clear_password = tk.Button(self.window_forgot, text = 'Clear',relief='groove',width=8,font=(
+                                        'consolas', 13, 'bold'), bg='#f1f5e0', command=self.password_clear)
+        self.clear_password.place(x=300, y=280)
+
+
+
+    @staticmethod
+    def open_about():
+        """This method opens the About Window"""
+        about.About_Window()
+
+    def back(self):
+        """This method closes the forgot_password window and redirects to login window"""
+        self.window_forgot.destroy()
+
+        login.Login_Window()
+
+    def clear_the_answers(self):
+        self.security_answer_1_var.set('')
+        self.security_answer_2_var.set('')
+        self.security_answer_1_entry.focus()
+
+    def cancel_the_changes(self):
+        self.security_question_1.destroy()
+        self.security_question_1_text.destroy()
+        self.security_answer_1.destroy()
+        self.security_answer_1_entry.destroy()
+        self.security_question_2.destroy()
+        self.security_question_2_text.destroy()
+        self.security_answer_2.destroy()
+        self.security_answer_2_entry.destroy()
+        self.change_password.destroy()
+        self.get_question.destroy()
+        self.clear_username.destroy()
+        self.clear_answers.destroy()
+        self.cancel_changes.destroy()
+        self.init_ui()
+
+    def clear_username_entry(self):
+        """This function clears the data in the entry box of the username"""
+        self.username_entry_var.set('')
+
+    def password_clear(self):
+        """This function clears the data in the passwords entry boxes"""
+        self.enter_new_password_entry_var.set('')
+        self.retype_password_entry_var.set('')
+
+    def change_the_password(self, username):
+        """This function passes the data to the back_end to update the password"""
+        pass_1 = self.enter_new_password_entry_var.get()
+        pass_2 = self.retype_password_entry_var.get()
+
+        if pass_1 == pass_2:
+            back_end.update_password(username, pass_1)
+            self.window_forgot.destroy()
+            self.login.open_window()
+
+        else:
+            pass
+
+if __name__ == "__main__":
+    Forgot_Password()

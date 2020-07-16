@@ -6,6 +6,7 @@ class About_Window(object):
     """This class runs the UI of the About Window"""
 
     def __init__(self):
+        """This __init__ method is to defines the About Window elements"""
         self.window_about = tk.Toplevel()
         self.window_about.title('About')
         self.window_about.geometry('600x300')
@@ -15,6 +16,7 @@ class About_Window(object):
         self.init_ui()
 
     def init_ui(self):
+        """This method adds the widgets to the About Window"""
 
         self.heading = tk.Label(self.window_about, text='About Me', font=(
             'georgia', 24, 'bold'), bg='black', fg='orange')

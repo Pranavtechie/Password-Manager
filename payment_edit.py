@@ -4,6 +4,9 @@ import about
 import back_end
 import pyperclip as pc
 
+def open_about():
+    about.About_Window()
+
 def copy_data(text):
     """This function copies the data in the entry box to the clipboard"""
     pc.copy(text)
@@ -87,7 +90,7 @@ def open_window(username, button_name,fe_name, card_number, name_on_card, expiry
 
     about_image = tk.PhotoImage(file='resources/about.png')
     about_icon = tk.Button(window_edit_payment, image=about_image, bg='black', fg='white', relief='flat',
-                           command=about.open_window)
+                           command=open_about)
     about_icon.place(x=440, y=0)
 
     feature_name = tk.Label(window_edit_payment, text='Feature Name', font=(

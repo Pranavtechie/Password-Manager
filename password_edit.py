@@ -5,6 +5,9 @@ import back_end
 import about
 import pyperclip as pc
 
+def open_about():
+    about.About_Window()
+
 def get_data(username, button_value):
     """This function get's the data from the entry to save in the database"""
     fe_name = feature_name_entry_var.get()
@@ -74,7 +77,7 @@ def open_window(username, button_name,fe_name,pass_username,pass_password, ref_1
 
     about_image = tk.PhotoImage(file='resources/about.png')
     about_icon = tk.Button(window_edit_password, image=about_image, bg='black', fg='white', relief='flat',
-                           command=about.open_window)
+                           command=open_about)
     about_icon.place(x=440, y=0)
 
     feature_name = tk.Label(window_edit_password, text='Feature Name', font=(
