@@ -1,9 +1,9 @@
 """This module manages the UI of the Forgot Password window"""
 import tkinter as tk
 import about
-import back_end
 from tkinter import messagebox as msgb
 import login
+import sqlite3 as sq
 
 class Forgot_Password(object):
     """This class runs the UI of the Forgot Password Window"""
@@ -66,9 +66,9 @@ class Forgot_Password(object):
                               image=self.happy_img, compound='right',bg='black', fg='white', font=('Maiandra GD', 14))
         self.happy.place(x=70, y=40)
 
-        self.username = tk.Label(self.window_forgot, text='Username', font=(
+        self.username_label = tk.Label(self.window_forgot, text='Username', font=(
             'timesnewroman', 12), bg='black', fg='white')
-        self.username.place(x=60, y=90)
+        self.username_label.place(x=60, y=90)
 
         self.username_entry_var = tk.StringVar()
         self.username_entry = tk.Entry(self.window_forgot, font=('arial', 12),
@@ -95,15 +95,17 @@ class Forgot_Password(object):
 
         self.given_username = self.username_entry_var.get()
 
-        self.auth = back_end.check_username_for_signup(self.given_username)
+        self.auth = self.check_username()
 
-        if not self.auth:
+
+
+        if self.auth:
 
             self.username_entry.configure(state = 'disabled')
             self.get_question.destroy()
             self.clear_username.destroy()
 
-            self.sq_1, self.sq_2 = back_end.get_question(self.given_username)
+            self.sq_1, self.sq_2 = self.get_question(self.given_username)
 
             self.security_question_1 = tk.Label(self.window_forgot, text='Security Question 1', font=(
                 'arial', 12, 'bold'), fg='#FFB6C1', bg='black')
@@ -167,6 +169,52 @@ class Forgot_Password(object):
         else:
             msgb.showerror('Error in Username Check', 'The entered Username does not exists please try again')
 
+    @staticmethod
+    def get_question(got_username):
+        """This function returns the security questions of the user as output"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        sql = f"SELECT question_1, question_2 FROM users_data WHERE username = '{got_username}'"
+
+        running = cursor.execute(sql)
+        values = running.fetchone()
+
+        question_1 = values[0]
+        question_2 = values[1]
+
+        conn.commit()
+        conn.close()
+
+        return question_1, question_2
+
+    def check_username(self):
+        """This function checks whether given username exists or not"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT COUNT(username) FROM users_data")
+        count = cursor.fetchone()
+        count = count[0]
+
+        cursor.execute('SELECT username FROM users_data;')
+        database_usernames = cursor.fetchall()
+
+        username_list = []
+        for i in range(count):
+            var = database_usernames[i][0]
+            if var not in username_list:
+                username_list.append(var)
+
+        conn.commit()
+        conn.close()
+
+        if self.given_username not in username_list:
+            return False
+
+        else:
+            return True
+
     def change_pass(self):
         """This function destroys the widgets in the window to show password widgets"""
 
@@ -187,7 +235,7 @@ class Forgot_Password(object):
             self.check_for_answer = False
 
         else:
-            self.check_for_answer = back_end.check_answers(usr, answer_1, answer_2)
+            self.check_for_answer = self.check_answers(usr, answer_1, answer_2)
 
         if self.check_for_answer:
 
@@ -210,6 +258,51 @@ class Forgot_Password(object):
 
         else:
             pass
+
+    @staticmethod
+    def check_answers(user_address, ans_1, ans_2):
+        """This function returns True if the answers given are matched with the database"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        val_1 = hl.sha256(ans_1.encode('UTF-8'))
+        got_ans_1 = val_1.hexdigest()
+
+        val_2 = hl.sha256(ans_2.encode('UTF-8'))
+        got_ans_2 = val_2.hexdigest()
+
+        try:
+            sql = f"SELECT answer_1, answer_2 FROM users_data WHERE username = '{user_address}'"
+            value = cursor.execute(sql)
+            data = value.fetchone()
+
+            sql_ans_1 = data[0]
+            sql_ans_2 = data[1]
+
+            if sql_ans_1 != got_ans_1 and sql_ans_2 != got_ans_2:
+                msgb.showerror('Error in Access', 'You both the answers are wrong. Please Enter again')
+                return False
+
+            elif sql_ans_1 != got_ans_1 and sql_ans_2 == got_ans_2:
+                msgb.showerror('Error in Access', 'You answer for question 1 is incorrect please try again')
+                return False
+
+            elif sql_ans_1 == got_ans_1 and sql_ans_2 != got_ans_2:
+                msgb.showerror('Error in Access', 'Your answer for question 2 is incorrect please try again')
+                return False
+
+            elif sql_ans_1 == got_ans_1 and sql_ans_2 == got_ans_2:
+                msgb.showinfo('Access Granted', 'You have got the permission to change the password')
+                return True
+
+            else:
+                return False
+
+        except Error as e:
+            print(e)
+
+        conn.commit()
+        conn.close()
 
     def enter_changes(self, username):
         """This function manages the UI of the password entry and gets the new password data """
@@ -239,8 +332,6 @@ class Forgot_Password(object):
         self.clear_password = tk.Button(self.window_forgot, text = 'Clear',relief='groove',width=8,font=(
                                         'consolas', 13, 'bold'), bg='#f1f5e0', command=self.password_clear)
         self.clear_password.place(x=300, y=280)
-
-
 
     @staticmethod
     def open_about():
@@ -284,17 +375,35 @@ class Forgot_Password(object):
         self.retype_password_entry_var.set('')
 
     def change_the_password(self, username):
-        """This function passes the data to the back_end to update the password"""
+        """This function passes the data to update the password"""
         pass_1 = self.enter_new_password_entry_var.get()
         pass_2 = self.retype_password_entry_var.get()
 
         if pass_1 == pass_2:
-            back_end.update_password(username, pass_1)
+            self.update_password(username, pass_1)
             self.window_forgot.destroy()
             self.login.open_window()
 
         else:
             pass
 
-if __name__ == "__main__":
-    Forgot_Password()
+    @staticmethod
+    def update_password(username, password):
+        """This function updates the user password after recovery"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        value = hl.sha256(password.encode('UTF-8'))
+        enc_password = value.hexdigest()
+
+        sql = f"UPDATE users_data SET password = '{enc_password}' WHERE username = '{username}'"
+        try:
+            cursor.execute(sql)
+            msgb.showinfo('Success', 'You have successfully changed your password please login')
+
+
+        except Error as e:
+            print(e)
+
+        conn.commit()
+        conn.close()

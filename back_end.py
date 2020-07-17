@@ -40,73 +40,6 @@ def check_username_for_signup(username):
         return False
 
 
-def login_for_use(username, text_password):
-    """This function is for validating the Login of the user"""
-
-    global username_credentials, password_credentials
-    word = hl.sha256(text_password.encode('utf-8'))
-    password = word.hexdigest()
-
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-
-    try:
-        cursor.execute('SELECT COUNT(username) FROM users_data')
-        count = cursor.fetchone()
-        count = count[0]
-
-        cursor.execute('SELECT username FROM users_data;')
-        database_usernames = cursor.fetchall()
-
-        username_list = []
-        for i in range(count):
-            var = database_usernames[i][0]
-            if var not in username_list:
-                username_list.append(var)
-
-        cursor.execute(
-            "SELECT * FROM users_data WHERE username = '%s'" % username)
-        credentials = cursor.fetchall()
-
-        if username not in username_list:
-            msgb.showerror('Error in Login','No such username exists')
-
-        try:
-            username_credentials = credentials[0][0]
-            password_credentials = credentials[0][1]
-
-            show_name = f"{credentials[0][2]} {credentials[0][3]}"
-
-        except:
-            pass
-
-    except Error as e:
-        print(e)
-        username_credentials = ''
-        password_credentials = ''
-        msgb.showwarning('Login Error', 'Please enter a valid username')
-
-    try:
-
-        if username == '':
-            msgb.showwarning('Login Error', 'Please enter the username')
-
-        elif password == '':
-            msgb.showwarning('Login Error', 'Please enter the password')
-
-        elif username == username_credentials and password != password_credentials:
-            msgb.showwarning('Login Error', 'Please enter the correct password')
-
-        elif password == password_credentials and username == username_credentials:
-
-            login.window_login.destroy()
-            main_window.open_the_main_window(username, show_name)
-
-        else:
-            pass
-
-    except:
-        pass
 
 def insert_data(f_name, l_name, username, password, q_1, a_1, q_2, a_2):
     """This functions Signs Up the user for the use of the program"""
@@ -215,125 +148,14 @@ and if evaluated True the account and its tables are deleted"""
     conn.commit()
     conn.close()
 
-def get_question(got_username):
-    """This function returns the security questions of the user as output"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-
-    sql = f"SELECT question_1, question_2 FROM users_data WHERE username = '{got_username}'"
-
-    running = cursor.execute(sql)
-    values = running.fetchone()
-
-    question_1 = values[0]
-    question_2 = values[1]
-
-    conn.commit()
-    conn.close()
-
-    return question_1,question_2
 
 
-def check_answers(user_address, ans_1, ans_2):
-    """This function returns True if the answers given are matched with the database"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-
-    val_1 = hl.sha256(ans_1.encode('UTF-8'))
-    got_ans_1 = val_1.hexdigest()
-
-    val_2 = hl.sha256(ans_2.encode('UTF-8'))
-    got_ans_2 =  val_2.hexdigest()
-
-    try:
-        sql = f"SELECT answer_1, answer_2 FROM users_data WHERE username = '{user_address}'"
-        value = cursor.execute(sql)
-        data = value.fetchone()
-
-        sql_ans_1 = data[0]
-        sql_ans_2 = data[1]
-
-        if sql_ans_1 != got_ans_1 and sql_ans_2 != got_ans_2:
-            msgb.showerror('Error in Access','You both the answers are wrong. Please Enter again')
-            return False
-
-        elif sql_ans_1 != got_ans_1 and sql_ans_2 == got_ans_2:
-            msgb.showerror('Error in Access', 'You answer for question 1 is incorrect please try again')
-            return False
-
-        elif sql_ans_1 == got_ans_1 and sql_ans_2 != got_ans_2:
-            msgb.showerror('Error in Access', 'Your answer for question 2 is incorrect please try again')
-            return False
-
-        elif sql_ans_1 == got_ans_1 and sql_ans_2 == got_ans_2:
-            msgb.showinfo('Access Granted','You have got the permission to change the password')
-            return True
-
-        else:
-            return False
-
-    except Error as e:
-        print(e)
-
-    conn.commit()
-    conn.close()
-
-def update_password(username,password):
-    """This function updates the user password after recovery"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-
-    value = hl.sha256(password.encode('UTF-8'))
-    enc_password = value.hexdigest()
-
-    sql = f"UPDATE users_data SET password = '{enc_password}' WHERE username = '{username}'"
-    try:
-        cursor.execute(sql)
-        msgb.showinfo('Success', 'You have successfully changed your password please login')
 
 
-    except Error as e:
-        print(e)
 
-    conn.commit()
-    conn.close()
 
-def get_address_button_data(usr, value):
-    """This function shows the values of the address related data"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-    try:
-        sql = f"SELECT * FROM {usr}_address WHERE val_no = '{value}'"
-        pass_sql = cursor.execute(sql)
-        data = pass_sql.fetchmany()
 
-        fe_name = data[0][1]
-        address_1 = data[0][2]
-        address_2 = data[0][3]
-        town = data[0][4]
-        district = data[0][5]
-        state = data[0][6]
-        pin = data[0][7]
 
-        if fe_name[0:5] == 'empty':
-            msgb.showwarning('Open first time', 'You are opening this box for the first time please fill the details for further use')
-            address_1 = ''
-            address_2 = ''
-            town = ''
-            district = ''
-            state = ''
-            pin = ''
-
-        else:
-            pass
-
-        return fe_name,address_1, address_2, town, district,state, pin
-
-    except Error as e:
-        print(e)
-
-    conn.commit()
-    conn.close()
 
 def update_address_data(username, button_value,fe_name, add_1, add_2,town, district, state, pin):
     """This function updates the data in the address table in database"""
@@ -359,42 +181,6 @@ def update_address_data(username, button_value,fe_name, add_1, add_2,town, distr
     main_window.change_the_address_box_name(username)
     address_edit.window_edit_address.destroy()
 
-def get_payment_button_data(usr, value):
-    """This function shows the values of the payment related data"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-    try:
-        sql = f"SELECT * FROM {usr}_payment WHERE val_no = '{value}'"
-        pass_sql = cursor.execute(sql)
-        data = pass_sql.fetchmany()
-
-        fe_name = data[0][1]
-        card_number = data[0][2]
-        name_on_card = data[0][3]
-        expiry_date = data[0][4]
-        pay_username = data[0][5]
-        pay_password = data[0][6]
-
-
-        if fe_name[0:5] == 'empty':
-            msgb.showwarning('Open first time',
-                             'You are opening this box for the first time please fill the details for further use')
-            card_number = ''
-            name_on_card = ''
-            expiry_date = ''
-            pay_username = ''
-            pay_password = ''
-
-        else:
-            pass
-
-        return fe_name, card_number, name_on_card, expiry_date, pay_username, pay_password
-
-    except Error as e:
-        print(e)
-
-    conn.commit()
-    conn.close()
 
 def update_payment_data(username, button_value,fe_name, card_number, name_on_card, expiry_date, pay_username, pay_password):
     """This function updates the payment data to the database"""
@@ -423,39 +209,6 @@ def update_payment_data(username, button_value,fe_name, card_number, name_on_car
     main_window.change_the_payment_box_name(username)
     payment_edit.window_edit_payment.destroy()
 
-def get_password_button_data(usr, value):
-    """This function shows the values of the address related data"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
-    try:
-        sql = f"SELECT * FROM {usr}_password WHERE val_no = '{value}'"
-        pass_sql = cursor.execute(sql)
-        data = pass_sql.fetchmany()
-
-        fe_name = data[0][1]
-        pass_username = data[0][2]
-        pass_password = data[0][3]
-        ref_1 = data[0][4]
-        ref_2 = data[0][5]
-
-        if fe_name[0:5] == 'empty':
-            msgb.showwarning('Open first time', 'You are opening this box for the first time please fill the details for further use')
-            pass_username = ''
-            pass_password = ''
-            ref_1 = ''
-            ref_2 = ''
-
-
-        else:
-            pass
-
-        return fe_name,pass_username,pass_password, ref_1, ref_2
-
-    except Error as e:
-        print(e)
-
-    conn.commit()
-    conn.close()
 
 def update_password_data(username, button_value,fe_name,pass_username,pass_password, ref_1, ref_2):
     """This function updates the data to the database"""

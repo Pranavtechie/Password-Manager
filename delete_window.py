@@ -71,6 +71,7 @@ class Delete_Window(object):
         self.password_entry = tk.Entry(self.window_delete, font=('arial', 12), show='*',
                                   bg='#C0C0C0', textvariable=self.password_entry_var)
         self.password_entry.place(x=140, y=140)
+        self.password_entry.focus()
 
         self.retype_password = tk.Label(self.window_delete, text='Retype Password', font=(
             'timesnewroman', 12), bg='black', fg='white')

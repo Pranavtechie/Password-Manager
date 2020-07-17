@@ -1,10 +1,12 @@
 """This is the Login Window for the Password Manager Software"""
 
 import tkinter as tk
-import back_end
 import sign_up
 import forgot_password
 import about
+import main_window
+import sqlite3 as sq
+import hashlib as hl
 
 class Login_Window(object):
 
@@ -54,9 +56,9 @@ class Login_Window(object):
             'arial', 18, 'bold'), bg='black', fg='orange')
         self.heading.pack()
 
-        self.username = tk.Label(self.window_login, text='Username:', font=(
+        self.username_label = tk.Label(self.window_login, text='Username:', font=(
             'timesnewroman', 15), bg='black', fg='white')
-        self.username.place(x=10, y=60)
+        self.username_label.place(x=10, y=60)
 
         self.about_image = tk.PhotoImage(file='resources/about.png')
         self.about_icon = tk.Button(self.window_login, image=self.about_image, bg='black', fg='white', relief='flat',
@@ -142,7 +144,77 @@ class Login_Window(object):
         get_username = self.username_entry_var.get()
         get_password = self.password_entry_var.get()
 
-        back_end.login_for_use(get_username, get_password)
+        self.login_for_use(get_username, get_password)
+
+    def login_for_use(self, username, text_password):
+        """This method is for validating the Login of the user"""
+
+        global username_credentials, password_credentials
+        word = hl.sha256(text_password.encode('utf-8'))
+        password = word.hexdigest()
+
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute('SELECT COUNT(username) FROM users_data')
+            count = cursor.fetchone()
+            count = count[0]
+
+            cursor.execute('SELECT username FROM users_data;')
+            database_usernames = cursor.fetchall()
+
+            username_list = []
+            for i in range(count):
+                var = database_usernames[i][0]
+                if var not in username_list:
+                    username_list.append(var)
+
+            cursor.execute(
+                "SELECT * FROM users_data WHERE username = '%s'" % username)
+            credentials = cursor.fetchall()
+
+            if username not in username_list:
+                msgb.showerror('Error in Login', 'No such username exists')
+
+            try:
+                username_credentials = credentials[0][0]
+                password_credentials = credentials[0][1]
+
+                show_name = f"{credentials[0][2]} {credentials[0][3]}"
+
+            except:
+                pass
+
+        except Error as e:
+            print(e)
+            username_credentials = ''
+            password_credentials = ''
+            msgb.showwarning('Login Error', 'Please enter a valid username')
+
+        try:
+
+            if username == '':
+                msgb.showwarning('Login Error', 'Please enter the username')
+
+
+            elif password == '':
+                msgb.showwarning('Login Error', 'Please enter the password')
+
+
+            elif username == username_credentials and password != password_credentials:
+                msgb.showwarning('Login Error', 'Please enter the correct password')
+
+
+            elif password == password_credentials and username == username_credentials:
+                self.window_login.destroy()
+                main_window.Main_Window(username, show_name)
+
+            else:
+                pass
+
+        except:
+            pass
 
     @staticmethod
     def about_window():
