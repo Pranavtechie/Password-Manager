@@ -384,6 +384,7 @@ class Forgot_Password(object):
             self.window_forgot.destroy()
             self.login.open_window()
 
+
         else:
             pass
 

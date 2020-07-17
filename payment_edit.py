@@ -3,6 +3,8 @@ import tkinter as tk
 import about
 import back_end
 import pyperclip as pc
+import sqlite3 as sq
+from sqlite3 import Error
 
 class Payment_Window(object):
 
@@ -199,8 +201,36 @@ class Payment_Window(object):
         pay_username = self.username_entry_var.get()
         pay_password = self.password_entry_var.get()
 
-        back_end.update_payment_data(self.username, self.button_name, fe_name, card_no, name_card, expiry,
+        self.update_payment_data(self.username, self.button_name, fe_name, card_no, name_card, expiry,
                                      pay_username, pay_password)
+
+    def update_payment_data(self, fe_name, card_number, name_on_card, expiry_date, pay_username,
+                            pay_password):
+        """This method updates the payment data to the database"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        try:
+            update_payment = f"""UPDATE {self.username}_payment set fe_name = "{fe_name}",     
+                    card_number = "{card_number}",
+                    name_on_card = "{name_on_card}" ,
+                    expiry_date = "{expiry_date}",
+                    username = "{pay_username}",
+                    password = "{pay_password}"
+                    WHERE val_no = "{self.button_name}" """
+
+            cursor.execute(update_payment)
+
+            msgb.showinfo('Success', 'You have successfully update the data')
+
+        except Error as e:
+            print(e)
+
+        conn.commit()
+        conn.close()
+
+        main_window.change_the_payment_box_name(self.username)
+        self.window_edit_payment.destroy()
 
     def clear(self):
         """This method clears all the entries of the window"""

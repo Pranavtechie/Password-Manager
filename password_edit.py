@@ -177,8 +177,28 @@ class Password_Window(object):
         ref_1 = self.ref_1_entry_var.get()
         ref_2 = self.ref_2_entry_var.get()
 
-        back_end.update_password_data(self.username, self.button_value, fe_name, pass_username, pass_password, ref_1,
-                                      ref_2)
+        self.update_password_data(fe_name, pass_username, pass_password, ref_1,ref_2)
+
+    def update_password_data(self, fe_name, pass_username, pass_password, ref_1, ref_2):
+        """This function updates the data to the database"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        update = f"""UPDATE {self.username}_password set fe_name = "{fe_name}",     
+                username = "{pass_username}",
+                password = "{pass_password}" ,
+                ref_1 = "{ref_1}",
+                ref_2 = "{ref_2}"
+                WHERE val_no = "{self.button_value}" """
+        cursor.execute(update)
+
+        msgb.showinfo('Success', 'You have successfully update the data')
+
+        conn.commit()
+        conn.close()
+
+        main_window.change_the_password_box_name(self.username)
+        self.window_edit_password.destroy()
 
     @staticmethod
     def open_about():

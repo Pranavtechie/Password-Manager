@@ -2,6 +2,8 @@
 import tkinter as tk
 import about
 import back_end
+import sqlite3 as sq
+from sqlite3 import Error
 
 class Delete_Window(object):
     """This class runs the UI of the Delete Window"""
@@ -119,12 +121,64 @@ class Delete_Window(object):
     if the password entered is matched"""
         pw1 = self.password_entry_var.get()
         pw2 = self.retype_password_entry_var.get()
-        back_end.delete_account(filled_username, pw1, pw2)
+        self.delete_account(filled_username, pw1, pw2)
 
     def exit_window(self):
         """This window is called when exit button is pressed and
     closes the window and exiting the application"""
         self.window_delete.destroy()
+
+    @staticmethod
+    def delete_account(usr, pw1, pw2):
+        """This method checks whether the given passwords in the delete window are Correct
+    and if evaluated True the account and its tables are deleted"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+        cred = None
+        try:
+            sql = f"SELECT password FROM users_data WHERE username = '{usr}'"
+            out = cursor.execute(sql)
+            cred = out.fetchone()
+            cred = cred[0]
+
+
+        except Error as e:
+            print(e)
+
+        if pw1 == pw2:
+
+            val = hl.sha256(pw1.encode('UTF-8'))
+            password = val.hexdigest()
+
+            if password == cred:
+                try:
+                    sequel = f"DELETE FROM users_data where username = '{usr}'"
+                    cursor.execute(sequel)
+
+                    sequel_1 = f"DROP TABLE {usr}_password"
+                    cursor.execute(sequel_1)
+
+                    sequel_2 = f"DROP TABLE {usr}_address"
+                    cursor.execute(sequel_2)
+
+                    sequel_3 = f"DROP TABLE {usr}_payment"
+                    cursor.execute(sequel_3)
+
+                    msgb.showinfo('Success', 'You have successfully deleted you account we are sorry to see you go')
+
+                    delete_window.window_delete.destroy()
+                    login.open_window()
+                except Error as e:
+                    print(e)
+
+            else:
+                msgb.showerror('Error while deleting Account', 'The password is incorrect. Try Again')
+
+        else:
+            msgb.showerror('Error while deleting Account', 'The passwords entered do not match please re-enter')
+
+        conn.commit()
+        conn.close()
 
     @staticmethod
     def open_about():

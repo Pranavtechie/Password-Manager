@@ -1,10 +1,13 @@
 """This module manages the UI of the Address Edit window"""
 import tkinter as tk
+from tkinter import messagebox as msgb
 import about
-import back_end
 import pyperclip as pc
+import sqlite3 as sq
+import main_window
 
 class Address_Window(object):
+    """This class runs the UI of the Address Window"""
 
     def __init__(self,username, button_name,fe_name,address_1, address_2, town, district,state, pin):
         """This __init__ method is to defines the Address Window elements and strings from database"""
@@ -59,6 +62,7 @@ class Address_Window(object):
         self.exit_button.configure(bg='#f1f5e0')
 
     def init_ui(self):
+        """This methods adds widgets to the Address Window"""
 
         self.background = tk.PhotoImage(file='resources/line.png')
         self.background_image = tk.Label(self.window_edit_address, image=self.background,
@@ -103,7 +107,7 @@ class Address_Window(object):
 
         self.copy_image = tk.PhotoImage(file='resources/copy.png')
         self.copy_add_1 = tk.Button(self.window_edit_address, image=self.copy_image, relief='groove',
-                               command=lambda: self.copy_data(data_add_1))
+                               command=lambda: self.copy_data(self.data_add_1))
         self.copy_add_1.place(x=410, y=100)
 
         self.address_line_2 = tk.Label(self.window_edit_address, text='Address Line 2', font=(
@@ -178,12 +182,12 @@ class Address_Window(object):
         self.data_pin = self.pin_code_entry_var.get()
 
         self.copy_pin = tk.Button(self.window_edit_address, image=self.copy_image, relief='groove',
-                             command=lambda: copy_data(data_pin))
+                             command=lambda: self.copy_data(self.data_pin))
         self.copy_pin.place(x=320, y=225)
 
         self.save_button = tk.Button(self.window_edit_address, text='Save', font=(
             'consolas', 13, 'bold'), relief='groove', width=8, bg='#f1f5e0',
-                                command=lambda: self.get_data(self.username, self.button_name))
+                                command=self.get_data)
         self.save_button.place(x=30, y=300)
         self.save_button.bind('<Enter>', self.entered_storage_save_button)
         self.save_button.bind('<Leave>', self.leave_storage_save_button)
@@ -203,8 +207,9 @@ class Address_Window(object):
         self.window_edit_address.focus_force()
         self.window_edit_address.mainloop()
 
-    def get_data(self, username, button_value):
+    def get_data(self):
         """This method collects the data to update the database"""
+
         fe_name = self.feature_name_entry_var.get()
         add_1 = self.address_line_1_entry_var.get()
         add_2 = self.address_line_2_entry_var.get()
@@ -213,8 +218,30 @@ class Address_Window(object):
         state_var = self.state_entry_var.get()
         pin_var = self.pin_code_entry_var.get()
 
-        back_end.update_address_data(username, button_value, fe_name, add_1, add_2, town_var, district_var, state_var,
-                                     pin_var)
+        self.update_address_data(fe_name, add_1, add_2, town_var, district_var, state_var,pin_var)
+
+    def update_address_data(self, fe_name, add_1, add_2, town, district, state, pin):
+        """This method updates the data in the address table in database"""
+        conn = sq.connect('database.db')
+        cursor = conn.cursor()
+
+        update = f"""UPDATE {self.username}_address set fe_name = "{fe_name}",     
+                line_1 = "{add_1}",
+                line_2 = "{add_2}" ,
+                city = "{town}",
+                district = "{district}",
+                state = "{state}",
+                pin_code = "{pin}"
+                WHERE val_no = "{self.button_value}" """
+        cursor.execute(update)
+
+        msgb.showinfo('Success', 'You have successfully update the data')
+
+        conn.commit()
+        conn.close()
+
+        main_window.change_the_address_box_name(self.username)
+        self.window_edit_address.destroy()
 
     @staticmethod
     def copy_data(text):
