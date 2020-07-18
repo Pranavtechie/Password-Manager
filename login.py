@@ -1,6 +1,7 @@
 """This is the Login Window for the Password Manager Software"""
 
 import tkinter as tk
+from tkinter import messagebox as msgb
 import sign_up
 import forgot_password
 import about
@@ -208,7 +209,8 @@ class Login_Window(object):
 
             elif password == password_credentials and username == username_credentials:
                 self.window_login.destroy()
-                main_window.Main_Window(username, show_name)
+
+                go_to_main(username, show_name)
 
             else:
                 pass
@@ -221,5 +223,11 @@ class Login_Window(object):
         """This function opens the about_window"""
         about.About_Window()
 
+def go_to_main(username, show_name):
+    global root
+    root = main_window.Main_Window(username, show_name)
+
 if __name__ == '__main__':
+
     Login_Window()
+

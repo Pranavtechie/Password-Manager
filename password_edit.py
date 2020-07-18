@@ -4,6 +4,9 @@ import tkinter as tk
 import back_end
 import about
 import pyperclip as pc
+import sqlite3 as sq
+from sqlite3 import Error
+from tkinter import messagebox as msgb
 
 class Password_Window(object):
     """This class runs the UI of the Password Edit Window"""
@@ -137,7 +140,7 @@ class Password_Window(object):
 
         self.save_button = tk.Button(self.window_edit_password, text='Save', font=(
             'consolas', 13, 'bold'), relief='groove', width=8, bg='#f1f5e0',
-                                command=lambda: self.get_data(self.username, self.button_name))
+                                command=lambda: self.get_data)
         self.save_button.place(x=30, y=250)
         self.save_button.bind('<Enter>', self.entered_storage_save_button)
         self.save_button.bind('<Leave>', self.leave_storage_save_button)
@@ -176,6 +179,7 @@ class Password_Window(object):
         pass_password = self.save_password_entry_var.get()
         ref_1 = self.ref_1_entry_var.get()
         ref_2 = self.ref_2_entry_var.get()
+        print(fe_name)
 
         self.update_password_data(fe_name, pass_username, pass_password, ref_1,ref_2)
 

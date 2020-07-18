@@ -8,6 +8,7 @@ import payment_edit
 import delete_window
 import sqlite3 as sq
 from sqlite3 import Error
+from tkinter import messagebox as msgb
 
 class Main_Window(object):
 
@@ -739,7 +740,7 @@ class Main_Window(object):
         self.address_box_4.bind('<Enter>', self.entered_ad_4)
         self.address_box_4.bind('<Leave>', self.leave_ad_4)
 
-        self.change_the_address_box_name()
+        self.change_the_address_box_name(self.username)
 
         self.delete_account = tk.Button(self.window_main, text='Delete Your Account', bg='red', fg='white', font=(
                                         'arial', 10, 'bold'), command=self.open_delete_window)
@@ -748,13 +749,14 @@ class Main_Window(object):
         self.window_main.focus_force()
         self.window_main.mainloop()
 
-    def change_the_address_box_name(self):
+
+    def change_the_address_box_name(self, username):
         """This method changes the button name after updating the feature name"""
 
         conn = sq.connect('database.db')
         cursor = conn.cursor()
 
-        sql = f"SELECT fe_name from {self.username}_address"
+        sql = f"SELECT fe_name from {username}_address"
         getting = cursor.execute(sql)
         data = getting.fetchall()
 
@@ -774,6 +776,8 @@ class Main_Window(object):
 
         conn.commit()
         conn.close()
+
+
 
     def change_the_payment_box_name(self):
         """This function updates the feature name of the payment buttons"""
