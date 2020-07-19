@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import messagebox as msgb
+from sqlite3 import Error
 import sign_up
 import forgot_password
 import about
