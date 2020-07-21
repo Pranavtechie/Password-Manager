@@ -3,6 +3,10 @@ import tkinter as tk
 import about
 import sqlite3 as sq
 from sqlite3 import Error
+import hashlib as hl
+from tkinter import messagebox as msgb
+import login
+
 
 class Delete_Window(object):
     """This class runs the UI of the Delete Window"""
@@ -127,8 +131,8 @@ class Delete_Window(object):
     closes the window and exiting the application"""
         self.window_delete.destroy()
 
-    @staticmethod
-    def delete_account(usr, pw1, pw2):
+
+    def delete_account(self, usr, pw1, pw2):
         """This method checks whether the given passwords in the delete window are Correct
     and if evaluated True the account and its tables are deleted"""
         conn = sq.connect('database.db')
@@ -163,10 +167,10 @@ class Delete_Window(object):
                     sequel_3 = f"DROP TABLE {usr}_payment"
                     cursor.execute(sequel_3)
 
-                    msgb.showinfo('Success', 'You have successfully deleted you account we are sorry to see you go')
+                    msgb.showinfo('Success', 'You have successfully deleted you account we are sorry to see you go. Press Ok to exit the application')
 
-                    delete_window.window_delete.destroy()
-                    login.open_window()
+                    self.window_delete.destroy()
+
                 except Error as e:
                     print(e)
 

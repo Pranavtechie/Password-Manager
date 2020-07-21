@@ -20,10 +20,10 @@ class Forgot_Password(object):
         self.init_ui()
 
     def entered_get_question(self, event):
-        self.get_question.configure(bg='gold')
+        self.get_question_button.configure(bg='gold')
 
     def leave_get_question(self, event):
-        self.get_question.configure(bg='light blue')
+        self.get_question_button.configure(bg='light blue')
 
     def entered_clear_usr(self, event):
         self.clear_username.configure(bg='gold')
@@ -78,11 +78,11 @@ class Forgot_Password(object):
         self.username_entry.place(x=140, y=90)
         self.username_entry.focus()
 
-        self.get_question = tk.Button(self.window_forgot, text='Get Questions', bg='light blue', relief='groove',
+        self.get_question_button = tk.Button(self.window_forgot, text='Get Questions', bg='light blue', relief='groove',
                                  font=('Maiandra GD', 12, 'bold'), width=12, command=self.show_question)
-        self.get_question.place(x=160, y=130)
-        self.get_question.bind('<Enter>', self.entered_get_question)
-        self.get_question.bind('<Leave>', self.leave_get_question)
+        self.get_question_button.place(x=160, y=130)
+        self.get_question_button.bind('<Enter>', self.entered_get_question)
+        self.get_question_button.bind('<Leave>', self.leave_get_question)
 
         self.clear_username = tk.Button(self.window_forgot, text='Clear', bg='light blue', relief='groove',
                                    font=('Maiandra GD', 12, 'bold'), width=8, command=self.clear_username_entry)
@@ -104,7 +104,7 @@ class Forgot_Password(object):
         if self.auth:
 
             self.username_entry.configure(state = 'disabled')
-            self.get_question.destroy()
+            self.get_question_button.destroy()
             self.clear_username.destroy()
 
             self.sq_1, self.sq_2 = self.get_question(self.given_username)
@@ -126,7 +126,7 @@ class Forgot_Password(object):
 
             self.security_answer_1_var = tk.StringVar()
             self.security_answer_1_entry = tk.Entry(self.window_forgot, textvariable=self.security_answer_1_var,
-                                                    width=20, font=('arial', 12), bg='#C0C0C0')
+                                                    width=20, font=('arial', 12), bg='#C0C0C0', show = '*')
             self.security_answer_1_entry.place(x=160, y=210)
             self.security_answer_1_entry.focus()
 
@@ -147,7 +147,7 @@ class Forgot_Password(object):
 
             self.security_answer_2_var = tk.StringVar()
             self.security_answer_2_entry = tk.Entry(self.window_forgot, textvariable=self.security_answer_2_var,
-                                                    width=20, font=('arial', 12), bg='#C0C0C0')
+                                                    width=20, font=('arial', 12), bg='#C0C0C0', show = '*')
             self.security_answer_2_entry.place(x=160, y=290)
 
             self.change_password = tk.Button(self.window_forgot, text='Change Password', font=(
@@ -250,7 +250,7 @@ class Forgot_Password(object):
             self.security_answer_2.destroy()
             self.security_answer_2_entry.destroy()
             self.change_password.destroy()
-            self.get_question.destroy()
+            self.get_question_button.destroy()
             self.clear_username.destroy()
             self.clear_answers.destroy()
             self.cancel_changes.destroy()
@@ -315,7 +315,7 @@ class Forgot_Password(object):
 
         self.enter_new_password_entry_var = tk.StringVar()
         self.enter_new_password_entry = tk.Entry(self.window_forgot, textvariable=self.enter_new_password_entry_var,
-                                                 width=20, font=('arial', 12), bg='#C0C0C0')
+                                                 width=20, font=('arial', 12), bg='#C0C0C0', show = '*')
         self.enter_new_password_entry.place(x=170, y=210)
 
         self.retype_password = tk.Label(self.window_forgot, text='Retype Password', font=(
@@ -324,7 +324,7 @@ class Forgot_Password(object):
 
         self.retype_password_entry_var = tk.StringVar()
         self.retype_password_entry = tk.Entry(self.window_forgot, textvariable=self.retype_password_entry_var,
-                                              width=20, font=('arial', 12), bg='#C0C0C0')
+                                              width=20, font=('arial', 12), bg='#C0C0C0', show = '*')
         self.retype_password_entry.place(x=170, y=240)
 
         self.change_password = tk.Button(self.window_forgot, text = 'Change Password',relief='groove',width=15,font=(
@@ -384,7 +384,7 @@ class Forgot_Password(object):
         if pass_1 == pass_2:
             self.update_password(username, pass_1)
             self.window_forgot.destroy()
-            Login_Window()
+            login.Login_Window()
 
 
         else:

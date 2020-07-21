@@ -357,7 +357,6 @@ class Main_Window:
 
     def start_ui(self, username ,full_name):
         """This method adds the widgets to the Window"""
-        print(self)
 
         self.username = username
         self.full_name = full_name
@@ -753,7 +752,6 @@ class Main_Window:
 
     def change_the_address_box_name(self, username):
         """This method changes the button name after updating the feature name"""
-        print(self)
 
         conn = sq.connect('database.db')
         cursor = conn.cursor()
@@ -1124,3 +1122,6 @@ class Main_Window:
     def open_about():
         """This method opens the about window"""
         about.About_Window()
+
+object = Main_Window()
+

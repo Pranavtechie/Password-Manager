@@ -4,7 +4,7 @@ from tkinter import messagebox as msgb
 import about
 import pyperclip as pc
 import sqlite3 as sq
-import login
+import main_window
 
 
 
@@ -237,12 +237,12 @@ class Address_Window():
                 WHERE val_no = "{self.button_name}" """
         cursor.execute(update)
 
-        msgb.showinfo('Success', 'You have successfully update the data')
+        msgb.showinfo('Success', 'You have successfully updated the data')
 
         conn.commit()
         conn.close()
 
-        login.root.change_the_address_box_name(self.username)
+        main_window.object.change_the_address_box_name(self.username)
         self.window_edit_address.destroy()
 
     @staticmethod

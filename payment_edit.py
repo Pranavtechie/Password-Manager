@@ -5,7 +5,7 @@ import pyperclip as pc
 import sqlite3 as sq
 from sqlite3 import Error
 from tkinter import messagebox as msgb
-import login
+import main_window
 
 class Payment_Window(object):
 
@@ -222,7 +222,7 @@ class Payment_Window(object):
 
             cursor.execute(update_payment)
 
-            msgb.showinfo('Success', 'You have successfully update the data')
+            msgb.showinfo('Success', 'You have successfully updated the data')
 
         except Error as e:
             print(e)
@@ -230,8 +230,8 @@ class Payment_Window(object):
         conn.commit()
         conn.close()
 
-        login.root.change_the_payment_box_name(self.username)
-        print(login.root.full_name)
+        main_window.object.change_the_payment_box_name(self.username)
+
         self.window_edit_payment.destroy()
 
     def clear(self):
