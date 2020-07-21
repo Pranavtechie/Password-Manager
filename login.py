@@ -225,7 +225,11 @@ class Login_Window(object):
         about.About_Window()
 
 
-def call_main(username, full_name)
+root = main_window.Main_Window()
+
+def call_main(username, full_name):
+    root.start_ui(username, full_name)
+
 
 if __name__ == '__main__':
     Login_Window()

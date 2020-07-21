@@ -2,7 +2,6 @@
 
 import tkinter as tk
 import login
-import back_end
 import about
 from tkinter import messagebox as msgb
 import sqlite3 as sq

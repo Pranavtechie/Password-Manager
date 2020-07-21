@@ -4,6 +4,8 @@ import about
 import pyperclip as pc
 import sqlite3 as sq
 from sqlite3 import Error
+from tkinter import messagebox as msgb
+import login
 
 class Payment_Window(object):
 
@@ -200,7 +202,7 @@ class Payment_Window(object):
         pay_username = self.username_entry_var.get()
         pay_password = self.password_entry_var.get()
 
-        self.update_payment_data(self.username, self.button_name, fe_name, card_no, name_card, expiry,
+        self.update_payment_data(fe_name, card_no, name_card, expiry,
                                      pay_username, pay_password)
 
     def update_payment_data(self, fe_name, card_number, name_on_card, expiry_date, pay_username,
@@ -228,7 +230,8 @@ class Payment_Window(object):
         conn.commit()
         conn.close()
 
-        main_window.change_the_payment_box_name(self.username)
+        login.root.change_the_payment_box_name(self.username)
+        print(login.root.full_name)
         self.window_edit_payment.destroy()
 
     def clear(self):

@@ -242,8 +242,7 @@ class Address_Window():
         conn.commit()
         conn.close()
 
-        self.address_buttons(self.username)
-
+        login.root.change_the_address_box_name(self.username)
         self.window_edit_address.destroy()
 
     @staticmethod

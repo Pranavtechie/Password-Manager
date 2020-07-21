@@ -13,17 +13,6 @@ from tkinter import messagebox as msgb
 class Main_Window:
     """This class runs the UI of the Main Window"""
 
-    def __init__(self,username, full_name):
-        self.username = username
-        self.full_name = full_name
-        self.window_main = tk.Tk()
-        self.window_main.title('Password Handler')
-        self.window_main.geometry('1100x600')
-        self.window_main.resizable(False, False)
-        self.window_main.configure(bg='black')
-        self.window_main.iconbitmap('resources/icon.ico')
-        self.init_ui()
-
     def entered_data_1(self, event):
         self.data_1.configure(bg='#ffffff')
 
@@ -366,8 +355,19 @@ class Main_Window:
     def leave_ad_4(self, event):
         self.address_box_4.configure(bg = 'light blue')
 
-    def init_ui(self):
+    def start_ui(self, username ,full_name):
         """This method adds the widgets to the Window"""
+        print(self)
+
+        self.username = username
+        self.full_name = full_name
+
+        self.window_main = tk.Tk()
+        self.window_main.title('Password Handler')
+        self.window_main.geometry('1100x600')
+        self.window_main.resizable(False, False)
+        self.window_main.configure(bg='black')
+        self.window_main.iconbitmap('resources/icon.ico')
 
         self.heading = tk.Label(self.window_main, text='Welcome to Password Manager', font=(
                                 'georgia', 24, 'bold'), bg='black', fg='orange')
@@ -675,7 +675,7 @@ class Main_Window:
         self.data_48.bind('<Enter>', self.entered_data_48)
         self.data_48.bind('<Leave>', self.leave_data_48)
 
-        self.change_the_password_box_name()
+        self.change_the_password_box_name(self.username)
 
         self.payment_options = tk.Label(self.window_main, text='Payment Options',
                                    font=('arial', 16, 'bold'), bg='black', fg='orange')
@@ -711,7 +711,7 @@ class Main_Window:
         self.payment_options_5.bind('<Enter>', self.entered_payment_5)
         self.payment_options_5.bind('<Leave>', self.leave_payment_5)
 
-        self.change_the_payment_box_name()
+        self.change_the_payment_box_name(self.username)
 
         self.address_boxes = tk.Label(self.window_main, text='Address Boxes',
                                  font=('arial', 14, 'bold'), bg='black', fg='orange')
@@ -753,6 +753,7 @@ class Main_Window:
 
     def change_the_address_box_name(self, username):
         """This method changes the button name after updating the feature name"""
+        print(self)
 
         conn = sq.connect('database.db')
         cursor = conn.cursor()
@@ -780,13 +781,13 @@ class Main_Window:
 
 
 
-    def change_the_payment_box_name(self):
+    def change_the_payment_box_name(self, username):
         """This function updates the feature name of the payment buttons"""
         conn = sq.connect('database.db')
         cursor = conn.cursor()
 
         try:
-            sql = f"SELECT fe_name from {self.username}_payment"
+            sql = f"SELECT fe_name from {username}_payment"
             getting = cursor.execute(sql)
             pay_data = getting.fetchall()
 
@@ -813,12 +814,12 @@ class Main_Window:
         conn.commit()
         conn.close()
 
-    def change_the_password_box_name(self):
+    def change_the_password_box_name(self, username):
         """This method changes the button names in the password buttons after updating the feature name"""
         conn = sq.connect('database.db')
         cursor = conn.cursor()
         try:
-            sql = f"SELECT fe_name from {self.username}_password"
+            sql = f"SELECT fe_name from {username}_password"
             getting = cursor.execute(sql)
             pay_data = getting.fetchall()
 
@@ -1123,6 +1124,3 @@ class Main_Window:
     def open_about():
         """This method opens the about window"""
         about.About_Window()
-
-if __name__ == '__main__':
-    Main_Window('admin', 'pranav mandava')
