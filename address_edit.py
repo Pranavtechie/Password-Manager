@@ -5,11 +5,10 @@ import about
 import pyperclip as pc
 import sqlite3 as sq
 import login
-import main_window
 
 
 
-class Address_Window(object):
+class Address_Window():
     """This class runs the UI of the Address Window"""
 
     def __init__(self,username, button_name,fe_name,address_1, address_2, town, district,state, pin):
@@ -44,7 +43,7 @@ class Address_Window(object):
         self.window_edit_address.resizable(False, False)
         self.window_edit_address.configure(bg='black')
         self.window_edit_address.iconbitmap('resources/icon.ico')
-        self.init_ui()
+        self.address_ui()
 
     def entered_storage_save_button(self, event):
         self.save_button.configure(bg='#a3ffb3')
@@ -64,7 +63,7 @@ class Address_Window(object):
     def leave_storage_exit_button(self, event):
         self.exit_button.configure(bg='#f1f5e0')
 
-    def init_ui(self):
+    def address_ui(self):
         """This methods adds widgets to the Address Window"""
 
         self.background = tk.PhotoImage(file='resources/line.png')
@@ -243,7 +242,7 @@ class Address_Window(object):
         conn.commit()
         conn.close()
 
-        login.root.change_the_address_box_name(self.username)
+        self.address_buttons(self.username)
 
         self.window_edit_address.destroy()
 

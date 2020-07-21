@@ -211,7 +211,7 @@ class Login_Window(object):
             elif password == password_credentials and username == username_credentials:
                 self.window_login.destroy()
 
-                go_to_main(username, show_name)
+                call_main(username, show_name)
 
             else:
                 pass
@@ -224,11 +224,9 @@ class Login_Window(object):
         """This function opens the about_window"""
         about.About_Window()
 
-def go_to_main(username, show_name):
-    global root
-    root = main_window.Main_Window(username, show_name)
+
+def call_main(username, full_name)
 
 if __name__ == '__main__':
-
     Login_Window()
 

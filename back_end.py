@@ -1,30 +1,13 @@
+"""This function handles the back-end for the button function"""
+import main_window
 
-import sqlite3 as sq
+class Back_End(main_window.Main_Window):
 
-def check_username_for_signup(username):
-    """This function checks whether given username exists or not"""
-    conn = sq.connect('database.db')
-    cursor = conn.cursor()
+    def __init__(self, got_username):
+        super(Back_End, self).__init__()
+        self.got_username = got_username
 
-    cursor.execute('SELECT COUNT(username) FROM users_data')
-    count = cursor.fetchone()
-    count = count[0]
-
-    cursor.execute('SELECT username FROM users_data;')
-    database_usernames = cursor.fetchall()
+    def address_buttons(self):
+        self.change_the_address_box_name(self.got_username)
 
 
-    username_list = []
-    for i in range(count):
-        var = database_usernames[i][0]
-        if var not in username_list:
-            username_list.append(var)
-
-    conn.commit()
-    conn.close()
-
-    if username not in username_list:
-        return True
-
-    else:
-        return False

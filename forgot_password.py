@@ -4,6 +4,8 @@ import about
 from tkinter import messagebox as msgb
 import login
 import sqlite3 as sq
+import hashlib as hl
+from sqlite3 import Error
 
 class Forgot_Password(object):
     """This class runs the UI of the Forgot Password Window"""
@@ -326,7 +328,7 @@ class Forgot_Password(object):
         self.retype_password_entry.place(x=170, y=240)
 
         self.change_password = tk.Button(self.window_forgot, text = 'Change Password',relief='groove',width=15,font=(
-                    'consolas', 13, 'bold'), bg='#f1f5e0', command=lambda: change_the_password(username))
+                    'consolas', 13, 'bold'), bg='#f1f5e0', command=lambda: self.change_the_password(username))
         self.change_password.place(x=130, y=280)
 
         self.clear_password = tk.Button(self.window_forgot, text = 'Clear',relief='groove',width=8,font=(
@@ -382,7 +384,7 @@ class Forgot_Password(object):
         if pass_1 == pass_2:
             self.update_password(username, pass_1)
             self.window_forgot.destroy()
-            self.login.open_window()
+            Login_Window()
 
 
         else:

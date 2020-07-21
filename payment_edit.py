@@ -1,7 +1,6 @@
 """This module manages the UI of the Payment edit window"""
 import tkinter as tk
 import about
-import back_end
 import pyperclip as pc
 import sqlite3 as sq
 from sqlite3 import Error

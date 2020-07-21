@@ -1,7 +1,6 @@
 """This module manages the UI of the Password Edit window"""
 
 import tkinter as tk
-import back_end
 import about
 import pyperclip as pc
 import sqlite3 as sq

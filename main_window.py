@@ -10,7 +10,8 @@ import sqlite3 as sq
 from sqlite3 import Error
 from tkinter import messagebox as msgb
 
-class Main_Window(object):
+class Main_Window:
+    """This class runs the UI of the Main Window"""
 
     def __init__(self,username, full_name):
         self.username = username
