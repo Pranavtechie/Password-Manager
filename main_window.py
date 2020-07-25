@@ -9,6 +9,9 @@ import delete_window
 import sqlite3 as sq
 from sqlite3 import Error
 from tkinter import messagebox as msgb
+from pygame import mixer
+
+mixer.init()
 
 class Main_Window:
     """This class runs the UI of the Main Window"""
@@ -357,7 +360,7 @@ class Main_Window:
 
     def start_ui(self, username ,full_name):
         """This method adds the widgets to the Window"""
-
+        self.play_music()
         self.username = username
         self.full_name = full_name
 
@@ -746,8 +749,25 @@ class Main_Window:
                                         'arial', 10, 'bold'), command=self.open_delete_window)
         self.delete_account.place(x=955, y=570)
 
+        self.play_image = tk.PhotoImage(file = "resources/play_button.png")
+        self.play_button = tk.Button(self.window_main, image = self.play_image, bg = 'black', relief = 'flat',
+                                     command = self.play_music)
+        self.play_button.place(x = 5, y = 565)
+
+        self.pause_image = tk.PhotoImage(file = "resources/pause_button.png")
+        self.pause_button = tk.Button(self.window_main, image = self.pause_image, bg = 'black', relief = 'flat',
+                                      command = self.stop_music)
+        self.pause_button.place(x = 40, y = 565)
+
         self.window_main.focus_force()
         self.window_main.mainloop()
+
+    def play_music(self):
+        mixer.music.load("pleasant.wav")
+        mixer.music.play(-1)
+
+    def stop_music(self):
+        mixer.music.stop()
 
 
     def change_the_address_box_name(self, username):
