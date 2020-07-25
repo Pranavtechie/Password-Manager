@@ -762,11 +762,13 @@ class Main_Window:
         self.window_main.focus_force()
         self.window_main.mainloop()
 
-    def play_music(self):
-        mixer.music.load("pleasant.wav")
+    @staticmethod
+    def play_music():
+        mixer.music.load("resources/pleasant.wav")
         mixer.music.play(-1)
 
-    def stop_music(self):
+    @staticmethod
+    def stop_music():
         mixer.music.stop()
 
 
