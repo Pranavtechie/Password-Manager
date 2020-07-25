@@ -10,6 +10,7 @@ import main_window
 import sqlite3 as sq
 import hashlib as hl
 
+
 class Login_Window(object):
 
     def __init__(self):
@@ -20,6 +21,7 @@ class Login_Window(object):
         self.window_login.resizable(False, False)
         self.window_login.configure(bg='black')
         self.window_login.iconbitmap('resources/icon.ico')
+
         self.init_ui()
 
     def entered_login_button(self, event):
@@ -231,4 +233,3 @@ def call_main(username, full_name):
 
 if __name__ == '__main__':
     Login_Window()
-

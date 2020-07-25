@@ -1,0 +1,5 @@
+Hello Everyone,
+
+This is a simple Password Manager Appilication where you can manage you passwords in delightful user experience and safely.
+
+Hope you enjoy using it in your daily life.

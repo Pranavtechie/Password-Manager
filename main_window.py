@@ -1124,4 +1124,3 @@ class Main_Window:
         about.About_Window()
 
 object = Main_Window()
-
