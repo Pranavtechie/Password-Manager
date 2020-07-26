@@ -157,6 +157,7 @@ class Password_Window(object):
         self.exit_button.bind('<Enter>', self.entered_storage_exit_button)
         self.exit_button.bind('<Leave>', self.leave_storage_exit_button)
 
+        self.window_edit_password.focus_force()
         self.window_edit_password.mainloop()
 
     def clear(self):

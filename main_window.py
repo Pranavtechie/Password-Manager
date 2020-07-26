@@ -10,6 +10,7 @@ import sqlite3 as sq
 from sqlite3 import Error
 from tkinter import messagebox as msgb
 from pygame import mixer
+import generate
 
 mixer.init()
 
@@ -358,12 +359,17 @@ class Main_Window:
     def leave_ad_4(self, event):
         self.address_box_4.configure(bg = 'light blue')
 
+    def enetered_generate_password(self, event):
+        self.generate_password.configure(bg = '#ffc9e2', fg = '#190054')
+
+    def leave_generate_password(self, event):
+        self.generate_password.configure(bg = '#80ff84', fg = '#000675')
+
     def start_ui(self, username ,full_name):
         """This method adds the widgets to the Window"""
         self.play_music()
         self.username = username
         self.full_name = full_name
-
         self.window_main = tk.Tk()
         self.window_main.title('Password Handler')
         self.window_main.geometry('1100x600')
@@ -759,8 +765,18 @@ class Main_Window:
                                       command = self.stop_music)
         self.pause_button.place(x = 40, y = 565)
 
+        self.generate_password = tk.Button(self.window_main, text = 'Generate a Password', bg = '#80ff84',
+                                           fg = '#000675', font = ('arial', 10, 'bold'), command = self.open_generate)
+        self.generate_password.place(x = 80, y = 570)
+        self.generate_password.bind('<Enter>', self.enetered_generate_password)
+        self.generate_password.bind('<Leave>', self.leave_generate_password)
+
         self.window_main.focus_force()
         self.window_main.mainloop()
+
+    @staticmethod
+    def open_generate():
+        generate.Generate_Window()
 
     @staticmethod
     def play_music():
